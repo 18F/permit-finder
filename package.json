@@ -1,0 +1,25 @@
+{
+  "name": "permit-finder",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "James Seppi",
+  "license": "CC0-1.0",
+  "private": true,
+  "engines": {
+    "node": "^6.10"
+  },
+  "scripts": {
+    "start:dev": "nodemon --watch app app/server.js",
+    "start": "node app/server.js"
+  },
+  "dependencies": {
+    "@turf/turf": "^4.1.0",
+    "geojson-rbush": "^1.0.1",
+    "hapi": "^16.1.1",
+    "inert": "^4.2.0",
+    "ramda": "^0.23.0"
+  },
+  "devDependencies": {
+    "nodemon": "^1.11.0"
+  }
+}

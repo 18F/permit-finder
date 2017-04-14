@@ -1,0 +1,4 @@
+node_modules/
+.DS_Store
+spatial_data/out/
+spatial_data/src/

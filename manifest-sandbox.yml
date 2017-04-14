@@ -1,0 +1,10 @@
+---
+applications:
+- name: permit-finder
+  instances: 1
+  memory: 512M
+  buildpack: nodejs_buildpack
+  command: npm start
+  stack: cflinuxfs2
+  timeout: 180
+ 

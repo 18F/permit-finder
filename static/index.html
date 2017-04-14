@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Prototype Permit Finder</title>
+  <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+
+<body>
+  <main>
+    <h1>Prototype Permit Finder</h1>
+    <p>Just a prototype</p>
+    <div id="map"></div>
+    <div id="app">
+      <p v-if="isLoading">
+        Loading...
+      </p>
+      <p v-if="!isLoading">
+        <div v-if="currentAgencies && currentAgencies.length">
+          <p>Agencies with federal land in view area:
+            <span v-for="agency in currentAgencies" v-bind:style="{ color: COLOR_MAP[agency] }">
+              {{ agency }}
+            </span>
+          </p>
+        </div>
+        <p v-if="!currentAgencies || !currentAgencies.length">
+          No federal lands in view area, or you're too zoomed out. Try zooming in or panning around.
+        </p>
+      </p>
+    </div>
+  </main>
+  <script src="/static/vendor/vue-2.2.6.js"></script>
+  <script src="/static/vendor/axios.min.js"></script>
+  <script src="/static/vendor/leaflet/leaflet.js"></script>
+  <script src="/static/vendor/leaflet-hash.js"></script>
+  <script src="/static/vendor/Leaflet.VectorGrid.bundled.js"></script>
+  <script src="/static/script.js"></script>
+</body>
+</html>

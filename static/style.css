@@ -1,0 +1,12 @@
+
+@import url('./vendor/uswds-1.0.0/css/uswds.min.css');
+
+html {
+  padding: 0 2em;
+}
+
+#map {
+  width: 700px;
+  height: 400px;
+  background: gray;
+}
