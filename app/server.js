@@ -22,7 +22,9 @@ function toBboxFeature(bboxString = "") {
 }
 
 server.connection({
-  host: "0.0.0.0",
+  // Using 'localhost' when developing is necessary to prevent the OSX
+  // firewall from asking to to allow the app every time it is restarted
+  host: process.env.VCAP_APPLICATION ? "0.0.0.0" : "localhost",
   port: process.env.PORT || 8000
 });
 
