@@ -1,5 +1,7 @@
+/* global L window Vue axios */
+
 const map = L.map("map").setView([38, -98], 4);
-new L.Hash(map);
+new L.Hash(map); // eslint-disable-line
 
 window.map = map;
 
@@ -15,6 +17,8 @@ const COLOR_MAP = {
   DEFAULT: "#dddddd"
 };
 
+const AGENCY_KEY = "AGBUR";
+
 L.tileLayer(
   "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
   {
@@ -25,7 +29,7 @@ L.tileLayer(
 
 let fedLandsLayer = null;
 
-var app = new Vue({
+const app = new Vue({
   el: "#app",
   data: {
     currentAgencies: null,
@@ -33,15 +37,6 @@ var app = new Vue({
     COLOR_MAP
   }
 });
-
-function getAgencies() {
-  axios.get(`/api/agencies?bbox=${map.getBounds().toBBoxString()}`).then(({
-    data
-  }) => {
-    currentAgencies = data;
-    app.currentAgencies = data;
-  });
-}
 
 function clearFedLayersLayer() {
   if (fedLandsLayer && map.hasLayer(fedLandsLayer)) {
@@ -59,10 +54,9 @@ function getFedLandFeatures() {
 
   app.isLoading = true;
 
-  axios.get(`/api/features?bbox=${map.getBounds().toBBoxString()}`).then(({
+  axios.get(`/api/features?bbox=[${map.getBounds().toBBoxString()}]`).then(({
     data
   }) => {
-    console.log(data);
     app.isLoading = false;
 
     if (!data.features.length) {
@@ -70,12 +64,19 @@ function getFedLandFeatures() {
     } else {
       console.log(`Adding ${data.features.length} features to map.`);
 
+      // Get unique agencies represented in the returned data
+      const agencies = data.features
+        .map(f => f.properties[AGENCY_KEY])
+        .filter((val, idx, self) => self.indexOf(val) === idx && val !== null);
+
+      app.currentAgencies = agencies;
+
       fedLandsLayer = L.vectorGrid
         .slicer(data, {
           rendererFactory: L.svg.tile,
           vectorTileLayerStyles: {
             sliced: properties => ({
-              fillColor: COLOR_MAP[properties.AGBUR] || COLOR_MAP.DEFAULT,
+              fillColor: COLOR_MAP[properties[AGENCY_KEY]] || COLOR_MAP.DEFAULT,
               fillOpacity: 0.8,
               fill: true,
               stroke: false
@@ -84,7 +85,7 @@ function getFedLandFeatures() {
           interactive: true
         })
         .on("click", e => {
-          var properties = e.layer.properties;
+          const properties = e.layer.properties;
           L.popup({ autoPan: false })
             .setContent(properties.AGBUR || "No agency")
             .setLatLng(e.latlng)
@@ -95,5 +96,4 @@ function getFedLandFeatures() {
   });
 }
 
-map.on("moveend", getAgencies);
 map.on("moveend", getFedLandFeatures);

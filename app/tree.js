@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 
 const rbush = require("geojson-rbush");
-const turf = require("@turf/turf");
 
 const FED_LANDS_FILE = path.join(
   "spatial_data",
