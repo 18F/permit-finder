@@ -1,9 +1,7 @@
-/* global L window Vue axios */
+/* global L Vue axios */
 
 const map = L.map("map").setView([38, -98], 4);
-new L.Hash(map); // eslint-disable-line
-
-window.map = map;
+L.hash(map); // enable hashed location
 
 const COLOR_MAP = {
   BLM: "#66c2a5",
@@ -18,14 +16,19 @@ const COLOR_MAP = {
 };
 
 const AGENCY_KEY = "AGBUR";
+const MIN_ZOOM = 6;
 
 L.tileLayer(
-  "https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png",
+  "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
   {
     maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
   }
 ).addTo(map);
+
+function isPastMinZoom() {
+  return map.getZoom() >= MIN_ZOOM;
+}
 
 let fedLandsLayer = null;
 
@@ -34,7 +37,8 @@ const app = new Vue({
   data: {
     currentAgencies: null,
     isLoading: false,
-    COLOR_MAP
+    COLOR_MAP,
+    isPastMinZoom: isPastMinZoom()
   }
 });
 
@@ -48,8 +52,11 @@ function clearFedLayersLayer() {
 function getFedLandFeatures() {
   clearFedLayersLayer();
 
-  if (map.getZoom() < 5) {
+  if (map.getZoom() < MIN_ZOOM) {
+    app.isLoading = false;
+    app.currentAgencies = null;
     console.log("Too zoomed out, not getting features");
+    return;
   }
 
   app.isLoading = true;
@@ -67,7 +74,8 @@ function getFedLandFeatures() {
       // Get unique agencies represented in the returned data
       const agencies = data.features
         .map(f => f.properties[AGENCY_KEY])
-        .filter((val, idx, self) => self.indexOf(val) === idx && val !== null);
+        .filter((val, idx, self) => self.indexOf(val) === idx && val !== null)
+        .sort();
 
       app.currentAgencies = agencies;
 
@@ -77,7 +85,7 @@ function getFedLandFeatures() {
           vectorTileLayerStyles: {
             sliced: properties => ({
               fillColor: COLOR_MAP[properties[AGENCY_KEY]] || COLOR_MAP.DEFAULT,
-              fillOpacity: 0.8,
+              fillOpacity: 0.9,
               fill: true,
               stroke: false
             })
@@ -96,4 +104,9 @@ function getFedLandFeatures() {
   });
 }
 
+function updateZoom() {
+  app.isPastMinZoom = isPastMinZoom();
+}
+
 map.on("moveend", getFedLandFeatures);
+map.on("zoomend", updateZoom);

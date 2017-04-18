@@ -10,24 +10,36 @@
 <body>
   <main>
     <h1>Prototype Permit Finder</h1>
-    <p>Just a prototype</p>
+    <p>This is a demo/prototype to show federally-owned lands in the current map extent.</p>
     <div id="map"></div>
     <div id="app">
-      <p v-if="isLoading">
-        Loading...
-      </p>
-      <p v-if="!isLoading">
+      <div v-if="isPastMinZoom">
+        <p v-if="isLoading">
+          Loading...
+        </p>
+
         <div v-if="currentAgencies && currentAgencies.length">
           <p>Agencies with federal land in view area:
-            <span v-for="agency in currentAgencies" v-bind:style="{ color: COLOR_MAP[agency] }">
+            <span v-for="agency in currentAgencies" v-bind:style="{ color: COLOR_MAP[agency] }" class="agency">
               {{ agency }}
             </span>
           </p>
         </div>
+
         <p v-if="!currentAgencies || !currentAgencies.length">
-          No federal lands in view area, or you're too zoomed out. Try zooming in or panning around.
+          No federal lands found in the current view extent.
         </p>
-      </p>
+      </div>
+      <div v-else>
+        <p>Please <strong>zoom in</strong> to view federal land features.</p>
+      </div>
+    </div>
+    <div class="credits">
+      Federal land information is from the "Federal Lands of the United States"
+      dataset by the USGS and was retrieved from
+      <a href="https://catalog.data.gov/dataset/federal-lands-of-the-united-states-direct-download">
+        https://catalog.data.gov/dataset/federal-lands-of-the-united-states-direct-download
+      </a>.
     </div>
   </main>
   <script src="/static/vendor/vue-2.2.6.js"></script>

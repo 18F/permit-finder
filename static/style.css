@@ -10,3 +10,12 @@ html {
   height: 400px;
   background: gray;
 }
+
+.agency {
+  font-weight: bold;
+  font-size: larger;
+}
+
+.credits {
+  color: #3e3e3e;
+}
