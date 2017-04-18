@@ -10,7 +10,7 @@ const COLOR_MAP = {
   FS: "#e78ac3",
   FWS: "#a6d854",
   NPS: "#ffd92f",
-  OTHER: "#b3b3b3",
+  OTHER: "#dddddd",
   TVA: "#e5c494",
   DEFAULT: "#dddddd"
 };
@@ -19,10 +19,17 @@ const AGENCY_KEY = "AGBUR";
 const MIN_ZOOM = 6;
 
 L.tileLayer(
-  "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png",
+  "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png",
   {
     maxZoom: 18,
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+  }
+).addTo(map);
+
+const labelLayer = L.tileLayer(
+  "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_only_labels/{z}/{x}/{y}.png",
+  {
+    maxZoom: 18
   }
 ).addTo(map);
 
@@ -85,7 +92,7 @@ function getFedLandFeatures() {
           vectorTileLayerStyles: {
             sliced: properties => ({
               fillColor: COLOR_MAP[properties[AGENCY_KEY]] || COLOR_MAP.DEFAULT,
-              fillOpacity: 0.9,
+              fillOpacity: 0.8,
               fill: true,
               stroke: false
             })
@@ -100,6 +107,7 @@ function getFedLandFeatures() {
             .openOn(map);
         });
       map.addLayer(fedLandsLayer);
+      labelLayer.bringToFront();
     }
   });
 }

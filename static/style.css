@@ -11,11 +11,25 @@ html {
   background: gray;
 }
 
+h1 {
+  margin-top: 1em;
+}
+
 .agency {
   font-weight: bold;
   font-size: larger;
+  background: black;
+}
+
+.agency:first-child {
+  padding-left: 0.25em;
+}
+.agency:last-child {
+  padding-right: 0.25em;
 }
 
 .credits {
+  border-top: 1px solid #3e3e3e;
+  padding-top: 1em;
   color: #3e3e3e;
 }
