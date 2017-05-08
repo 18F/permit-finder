@@ -50,6 +50,8 @@
   	"hotLayer": hotLayer,
   	"darkmatterLayer": darkmatterLayer
   };
+  var controlLayers = L.control.layers(baseLayers).addTo(myMap);
+  
   var overlays = {
   	"labelLayer": L.vectorGrid() //initialized with empty vectorGrid
   };
@@ -153,6 +155,7 @@
             });
           myMap.addLayer(fedLandsLayer);
           labelLayer.bringToFront();
+          controlLayers.addOverlay(fedLandsLayer, "fedLandsLayer");
         }
       });
   }
@@ -163,5 +166,5 @@
   
   myMap.on("moveend", getFedLandFeatures);
   myMap.on("zoomend", updateZoom);
-  L.control.layers(baseLayers, overlays).addTo(myMap);
+  
 })();
