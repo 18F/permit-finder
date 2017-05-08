@@ -1,7 +1,6 @@
 /* global L Vue axios */
 (function iife() {
-  const myMap = L.map("map").setView([38, -98], 4);
-  L.hash(myMap); // enable hashed location
+  
 
   const COLOR_MAP = {
     BLM: "#66c2a5",
@@ -18,6 +17,44 @@
   const AGENCY_KEY = "AGBUR";
   const MIN_ZOOM = 6;
 
+  // create the tile layer with correct attribution
+
+  var hotLayer = new L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', 
+  	{
+  		maxZoom: 20, 
+  		attribution: 'Data \u00a9 <a href="http://www.openstreetmap.org/copyright"> OpenStreetMap Contributors </a> Tiles \u00a9 HOT'
+  	}),
+  darkmatterLayer = L.tileLayer(
+    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png",
+    {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+    }
+  );
+
+  /*const labelLayer = L.tileLayer(
+    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_only_labels/{z}/{x}/{y}.png",
+    {
+      maxZoom: 18
+    });
+*/
+  var myMap = L.map("map",
+  {
+  	center: [38, -98],
+  	zoom: 4,
+  	layers: [hotLayer, darkmatterLayer] //multiple layers by default
+  });
+  L.hash(myMap); // enable hashed location
+
+  var baseLayers = {
+  	"hotLayer": hotLayer,
+  	"darkmatterLayer": darkmatterLayer
+  };
+  var overlays = {
+  	"labelLayer": L.vectorGrid() //initialized with empty vectorGrid
+  };
+
+/*
   L.tileLayer(
     "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png",
     {
@@ -32,6 +69,10 @@
       maxZoom: 18
     }
   ).addTo(myMap);
+*/
+
+  //myMap.setView(new L.LatLng(51.3, 0.7),9);
+  //myMap.addLayer(tilelayer);
 
   function isPastMinZoom() {
     return myMap.getZoom() >= MIN_ZOOM;
@@ -56,6 +97,7 @@
     }
   }
 
+  
   function getFedLandFeatures() {
     clearFedLayersLayer();
 
@@ -118,7 +160,8 @@
   function updateZoom() {
     app.isPastMinZoom = isPastMinZoom();
   }
-
+  
   myMap.on("moveend", getFedLandFeatures);
   myMap.on("zoomend", updateZoom);
+  L.control.layers(baseLayers, overlays).addTo(myMap);
 })();
