@@ -154,7 +154,7 @@
                 .openOn(myMap);
             });
           myMap.addLayer(fedLandsLayer);
-          fedLandsLayer.bringToFront();
+          //labelLayer.bringToFront();
           controlLayers.addOverlay(fedLandsLayer, "fedLandsLayer");
         }
       });
