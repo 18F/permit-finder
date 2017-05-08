@@ -4,8 +4,6 @@
 
 ## Developing
 
-TESTING
-
 **WORK-IN-PROGRESS**
 
 This is a NodeJS-based that project uses [`yarn`](https://yarnpkg.com/) for managing node dependencies.
