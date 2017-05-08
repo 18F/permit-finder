@@ -102,7 +102,10 @@
   
   function getFedLandFeatures() {
     clearFedLayersLayer();
-
+    if (fedLandsLayer){
+     controlLayers.removeLayer(fedLandsLayer);
+     fedLandsLayer = null;
+    }
     if (myMap.getZoom() < MIN_ZOOM) {
       app.isLoading = false;
       app.currentAgencies = null;
