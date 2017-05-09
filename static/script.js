@@ -29,8 +29,7 @@
     {
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
-    }
-  );
+    });
 
   
   var myMap = L.map("map",
