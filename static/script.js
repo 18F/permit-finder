@@ -32,12 +32,7 @@
     }
   );
 
-  /*const labelLayer = L.tileLayer(
-    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_only_labels/{z}/{x}/{y}.png",
-    {
-      maxZoom: 18
-    });
-*/
+  
   var myMap = L.map("map",
   {
   	center: [38, -98],
@@ -52,28 +47,6 @@
   };
   var controlLayers = L.control.layers(baseLayers).addTo(myMap);
   
-  /*
-  var overlays = {
-  	"labelLayer": L.vectorGrid() //initialized with empty vectorGrid
-  };
-*/
-/*
-  L.tileLayer(
-    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png",
-    {
-      maxZoom: 18,
-      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
-    }
-  ).addTo(myMap);
-
-  const labelLayer = L.tileLayer(
-    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_only_labels/{z}/{x}/{y}.png",
-    {
-      maxZoom: 18
-    }
-  ).addTo(myMap);
-*/
-
   //myMap.setView(new L.LatLng(51.3, 0.7),9);
   //myMap.addLayer(tilelayer);
 
@@ -103,12 +76,7 @@
   
   function getFedLandFeatures() {
     clearFedLayersLayer();
-    /*if (fedLandsLayer){
-     controlLayers.removeLayer(fedLandsLayer);
 
-     fedLandsLayer = null;
-
-    }*/
     if (myMap.getZoom() < MIN_ZOOM) {
       app.isLoading = false;
       app.currentAgencies = null;
@@ -161,8 +129,7 @@
             });
           myMap.addLayer(fedLandsLayer);
           fedLandsLayer.bringToFront();
-          //labelLayer.bringToFront();
-          //controlLayers.addOverlay(fedLandsLayer, "fedLandsLayer");
+          
         }
       });
   }
