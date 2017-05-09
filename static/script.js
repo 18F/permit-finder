@@ -52,10 +52,11 @@
   };
   var controlLayers = L.control.layers(baseLayers).addTo(myMap);
   
+  /*
   var overlays = {
   	"labelLayer": L.vectorGrid() //initialized with empty vectorGrid
   };
-
+*/
 /*
   L.tileLayer(
     "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png",
@@ -102,10 +103,12 @@
   
   function getFedLandFeatures() {
     clearFedLayersLayer();
-    if (fedLandsLayer){
+    /*if (fedLandsLayer){
      controlLayers.removeLayer(fedLandsLayer);
+
      fedLandsLayer = null;
-    }
+
+    }*/
     if (myMap.getZoom() < MIN_ZOOM) {
       app.isLoading = false;
       app.currentAgencies = null;
@@ -157,8 +160,9 @@
                 .openOn(myMap);
             });
           myMap.addLayer(fedLandsLayer);
+          fedLandsLayer.bringToFront();
           //labelLayer.bringToFront();
-          controlLayers.addOverlay(fedLandsLayer, "fedLandsLayer");
+          //controlLayers.addOverlay(fedLandsLayer, "fedLandsLayer");
         }
       });
   }
