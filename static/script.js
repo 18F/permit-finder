@@ -132,6 +132,7 @@
                 .setLatLng(e.latlng)
                 .openOn(myMap);
             });
+          fedLandsLayer.setOpacity(0.3);
           myMap.addLayer(fedLandsLayer);
           fedLandsLayer.bringToFront();
           
