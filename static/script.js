@@ -30,19 +30,25 @@
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
     });
-
+  var thunderforest = L.tileLayer(
+    "https://a.tile.thunderforest.com/landscape/{z}/{x}/{y}.png",
+    {
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+    });
   
   var myMap = L.map("map",
   {
   	center: [38, -98],
   	zoom: 4,
-  	layers: [hotLayer, darkmatterLayer] //multiple layers by default
+  	layers: [hotLayer, darkmatterLayer, thunderforest] //multiple layers by default
   });
   L.hash(myMap); // enable hashed location
 
   var baseLayers = {
   	"hotLayer": hotLayer,
-  	"darkmatterLayer": darkmatterLayer
+  	"darkmatterLayer": darkmatterLayer,
+    "thunderforest": thunderforest,
   };
   var controlLayers = L.control.layers(baseLayers).addTo(myMap);
   
