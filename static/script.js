@@ -1,7 +1,6 @@
 /* global L Vue axios */
 (function iife() {
-  const myMap = L.map("map").setView([38, -98], 4);
-  L.hash(myMap); // enable hashed location
+  
 
   const COLOR_MAP = {
     BLM: "#66c2a5",
@@ -18,20 +17,43 @@
   const AGENCY_KEY = "AGBUR";
   const MIN_ZOOM = 6;
 
-  L.tileLayer(
+  // create the tile layer with correct attribution
+
+  var hotLayer = new L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', 
+  	{
+  		maxZoom: 20, 
+  		attribution: 'Data \u00a9 <a href="http://www.openstreetmap.org/copyright"> OpenStreetMap Contributors </a> Tiles \u00a9 HOT'
+  	}),
+  darkmatterLayer = L.tileLayer(
     "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_nolabels/{z}/{x}/{y}.png",
     {
       maxZoom: 18,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
-    }
-  ).addTo(myMap);
-
-  const labelLayer = L.tileLayer(
-    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_only_labels/{z}/{x}/{y}.png",
+    });
+  var thunderforest = L.tileLayer(
+    "https://a.tile.thunderforest.com/landscape/{z}/{x}/{y}.png",
     {
-      maxZoom: 18
-    }
-  ).addTo(myMap);
+      maxZoom: 18,
+      attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>, &copy; <a href="https://carto.com/attribution">CARTO</a>'
+    });
+  
+  var myMap = L.map("map",
+  {
+  	center: [38, -98],
+  	zoom: 4,
+  	layers: [hotLayer, darkmatterLayer, thunderforest] //multiple layers by default
+  });
+  L.hash(myMap); // enable hashed location
+
+  var baseLayers = {
+  	"hotLayer": hotLayer,
+  	"darkmatterLayer": darkmatterLayer,
+    "thunderforest": thunderforest,
+  };
+  var controlLayers = L.control.layers(baseLayers).addTo(myMap);
+  
+  //myMap.setView(new L.LatLng(51.3, 0.7),9);
+  //myMap.addLayer(tilelayer);
 
   function isPastMinZoom() {
     return myMap.getZoom() >= MIN_ZOOM;
@@ -56,6 +78,7 @@
     }
   }
 
+  
   function getFedLandFeatures() {
     clearFedLayersLayer();
 
@@ -109,8 +132,10 @@
                 .setLatLng(e.latlng)
                 .openOn(myMap);
             });
+          fedLandsLayer.setOpacity(0.3);
           myMap.addLayer(fedLandsLayer);
-          labelLayer.bringToFront();
+          fedLandsLayer.bringToFront();
+          
         }
       });
   }
@@ -118,7 +143,8 @@
   function updateZoom() {
     app.isPastMinZoom = isPastMinZoom();
   }
-
+  
   myMap.on("moveend", getFedLandFeatures);
   myMap.on("zoomend", updateZoom);
+  
 })();
